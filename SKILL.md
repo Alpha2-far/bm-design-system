@@ -25,6 +25,7 @@ The user wants a clean, beautiful design system scaffolded into their app with m
 2. **Lean by default.** Do not dump 70+ files and 30+ npm packages into a project. Install only the lean core and pull components on demand.
 3. **Opinionated, not exhausting.** Ship with rock-solid defaults (Cyan accent, Amber signal, Slate neutrals, Inter/DM Sans typography).
 4. **Strict token adherence.** Primitives use semantic tokens (`bg-page`, `bg-surface`, `border-hairline`, `text-ink-body`, `text-ink-display`, `text-ink-muted`, `accent`, `signal`, `danger`).
+5. **Real-time surfacing & immediate visibility.** A design system must never be an invisible backend file or a forgotten route. It MUST be immediately visible and testable in the running app: mount `<ThemeToggle />` into the app's top bar and provide a direct link to `/admin` and `/admin/design-system`.
 
 ## Hard assumptions
 
@@ -70,7 +71,7 @@ If **Full Showcase** is selected:
 Ask for the route:
 - Question: "Where should the design system reference page live?"
 - Options: `(Recommended) Use /admin/design-system`, `Use /design-system (no admin prefix)`, `Use /styleguide`
-Save chosen route as `routePath` (default `/admin/design-system`).
+Save chosen route as `routePath` (default `/admin/design-system`). Also alias `/admin` to this route automatically.
 
 If **Lean / On-Demand** is selected (Default):
 `routePath` is set to `null` (no showcase route file generated).
@@ -145,7 +146,7 @@ Canonical Vite map:
 5. **In Full Showcase Mode**:
    - Copy all 46+ primitives from `references/components-ui/*.tsx` to `src/components/ui/`.
    - Copy `references/page/DesignSystem.tsx`, `SidebarNav`, `SectionShell`, `CodeBlock`, `ColorSwatch`, `palette.ts`, and `sections/**/*.tsx` into `src/components/design-system/`.
-   - Register route at `routePath`.
+   - Register route at `routePath` AND alias `/admin` to `routePath`.
 
 ### 4c. Wire the stylesheet
 
@@ -163,7 +164,15 @@ Install font `<link>` tags and the synchronous zero-FOUC theme boot script into 
 - Font link tags from `references/styles/font-link-tags.html`.
 - Theme boot script from `references/styles/theme-boot-script.html`.
 
-### 4e. Report missing dependencies
+### 4e. Real-Time Surfacing in Application UI (Mandatory)
+
+A design system must never remain an invisible or hidden file. The agent MUST automatically surface the design system into the app:
+1. **Mount `<ThemeToggle />`** in the application's top navigation bar or header so that Light, Dark, and System modes can be immediately tested and used in real time.
+2. **Add a direct navigation link to `/admin`** (e.g. `<a href="/admin">Design System (/admin)</a>`) in the header or top bar so developers can access the reference page in one click.
+3. **Register dual routes**: both `/admin` and `/admin/design-system` must resolve to the design system page without 404 errors.
+4. **Provide a return link**: the design system page must include a "← Retour à l'application" link to return to `/`.
+
+### 4f. Report missing dependencies
 
 **In Lean / On-Demand Mode**:
 Check `package.json` and report only what is needed for the lean core:
@@ -176,7 +185,7 @@ Check `package.json` and report only what is needed for the lean core:
 **In Full Showcase Mode**:
 Report the full suite of dependencies.
 
-### 4f. On-Demand Component Registry (Lookup Table)
+### 4g. On-Demand Component Registry (Lookup Table)
 
 When an agent or developer implements a feature requiring additional primitives, copy the file directly from the skill's `references/components-ui/<name>.tsx` into `src/components/ui/<name>.tsx` and install its peer dependency if missing:
 
@@ -244,6 +253,7 @@ Scan the codebase for raw `<button>`, `<input>`, or ad-hoc Tailwind colors (`bg-
 
 Print a summary:
 - Selected mode (Lean / On-Demand vs Full Showcase).
+- Real-time surfacing confirmation (ThemeToggle and `/admin` links).
 - Installed starter primitives in `src/components/ui/`.
 - Confirmation of agent instructions in `AGENTS.md`.
 - Quick reminder on how to pull additional primitives on-demand.

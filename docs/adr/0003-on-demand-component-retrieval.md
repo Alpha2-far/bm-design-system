@@ -38,3 +38,4 @@ We transition `bm-design-system` from a **Monolith Dump** model to a **Lean Core
   - Full power of the 46+ shadcn/ui component catalog remains available whenever needed.
 - **Negative / Trade-offs**:
   - Components are added incrementally rather than all existing upfront. (Mitigated by automated on-demand retrieval by the AI agent).
+
